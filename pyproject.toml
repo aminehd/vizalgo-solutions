@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vizalgo-solutions"
+version = "0.1.0"
+description = "LeetCode solution visualizations"
+requires-python = ">=3.11"
+dependencies = [
+    "vizalgo",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["solutions"]
