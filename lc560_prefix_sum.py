@@ -4,13 +4,8 @@ LC 560 — Subarray Sum Equals K
 Given an array of integers nums and an integer k, return the total number
 of subarrays whose sum equals k.
 
-Key insight: for each index i, we want to count how many previous prefix
-sums equal (prefix_sum - k). We store prefix sum frequencies in a hashmap.
-
-Demo of engine.step() — the clean single-call viz API:
-  - nums    → array panel with cursor at i
-  - acc     → hashmap panel with the lookup key highlighted
-  - scalars → counter cards (prefix_sum, res, k)
+Key insight: prefix_sum[i] - prefix_sum[j] = k  →  subarray nums[j+1..i] sums to k.
+Store prefix sum frequencies in a hashmap; each lookup is a valid subarray count.
 """
 
 from collections import defaultdict
@@ -20,7 +15,10 @@ engine = VizEngine("lc560", "Subarray Sum Equals K")
 
 
 @engine.solution
-@engine.show
+@engine.show(mark=lambda locs: {
+    "nums": {"cursor": locs.get("i")},
+    "acc":  {"highlight": locs.get("prefix_sum", 0) - locs.get("k", 0)},
+})
 def subarray_sum(nums: list, k: int) -> int:
     acc = defaultdict(int)
     acc[0] = 1
@@ -31,15 +29,6 @@ def subarray_sum(nums: list, k: int) -> int:
         prefix_sum += num
         res += acc[prefix_sum - k]
         acc[prefix_sum] += 1
-
-        engine.step(
-            locals(),
-            mark={
-                "nums": {"cursor": i},
-                "acc":  {"highlight": prefix_sum - k},
-            },
-            label=f"i={i}  prefix={prefix_sum}  lookup acc[{prefix_sum - k}] → +{acc[prefix_sum - k - 1]}",
-        )
 
     return res
 
